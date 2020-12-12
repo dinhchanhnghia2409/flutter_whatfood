@@ -1,0 +1,106 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:get/get.dart';
+import 'package:what_food/Screens/Login/login_screen.dart';
+import 'package:what_food/Screens/Signup/components/background.dart';
+import 'package:what_food/Screens/Signup/components/or_divider.dart';
+import 'package:what_food/Screens/Signup/components/social_icon.dart';
+import 'package:what_food/Services/AuthService.dart';
+import 'package:what_food/components/already_have_an_account_acheck.dart';
+import 'package:what_food/components/rounded_button.dart';
+import 'package:what_food/components/rounded_input_field.dart';
+import 'package:what_food/components/rounded_password_field.dart';
+
+class Body extends StatefulWidget {
+  @override
+  _BodyState createState() => _BodyState();
+}
+
+class _BodyState extends State<Body> {
+  String _phone, _password, _email, _name;
+  TextEditingController _nameController,
+      _passwordController,
+      _emailController,
+      _phoneController = TextEditingController();
+  @override
+  Widget build(BuildContext context) {
+    _submit() {
+      setState(() {});
+      AuthService.signup_Dio(_phone, _password, _email, _name);
+    }
+
+    Size size = MediaQuery.of(context).size;
+    return Background(
+      child: SingleChildScrollView(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Text(
+              "SIGN UP",
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(height: size.height * 0.02),
+            SvgPicture.asset(
+              "assets/icons/signup.svg",
+              height: size.height * 0.15,
+            ),
+            RoundedInputField(
+              controller: _phoneController,
+              hintText: "Your Phone",
+              onChanged: (value) => _phone = value,
+            ),
+            RoundedPasswordField(
+              onChanged: (value) => _password = value,
+            ),
+            RoundedInputField(
+              controller: _emailController,
+              hintText: "Your Email",
+              onChanged: (value) => _email = value,
+            ),
+            RoundedInputField(
+              controller: _nameController,
+              hintText: "Your Name",
+              onChanged: (value) => _name = value,
+            ),
+            RoundedButton(
+              text: "SIGNUP",
+              press: _submit,
+            ),
+            SizedBox(height: size.height * 0.005),
+            AlreadyHaveAnAccountCheck(
+              login: false,
+              press: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) {
+                      return LoginScreen();
+                    },
+                  ),
+                );
+              },
+            ),
+            OrDivider(),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                SocalIcon(
+                  iconSrc: "assets/icons/facebook.svg",
+                  press: () {},
+                ),
+                SocalIcon(
+                  iconSrc: "assets/icons/twitter.svg",
+                  press: () {},
+                ),
+                SocalIcon(
+                  iconSrc: "assets/icons/google-plus.svg",
+                  press: () {},
+                ),
+              ],
+            )
+          ],
+        ),
+      ),
+    );
+  }
+}
