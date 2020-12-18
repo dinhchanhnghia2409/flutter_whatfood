@@ -55,7 +55,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     }
 
     _updateAvatar() {
-      var res = ImageService.uploadAvatar_Dio(_image);
+      int res = 0;
       setState(() {
         print(res);
       });

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:what_food/Screens/Welcome/welcome_screen.dart';
+import 'Screens/Recommentation/RecommentPage.dart';
 
 void main() => runApp(MyApp());
 
@@ -9,7 +10,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
-      home: WelcomeScreen(),
+      home: DetectMain(),
       debugShowCheckedModeBanner: false,
       routes: {
         /*LoginPage.id: (context) => LoginPage(),

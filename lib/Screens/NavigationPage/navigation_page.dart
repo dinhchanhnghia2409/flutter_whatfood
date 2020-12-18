@@ -19,7 +19,7 @@ class _NavigationPageState extends State<NavigationPage>
     FeedPage(),
     SearchPage(),
     PostPage(),
-    RecommentPage(),
+    DetectMain(),
     ProfileScreen(),
   ];
   @override
