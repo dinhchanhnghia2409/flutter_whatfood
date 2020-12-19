@@ -4,7 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:tflite/tflite.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:what_food/Models/AiModel.dart';
+//import 'package:what_food/Models/AiModel.dart';
 import 'package:what_food/Screens/SearchPage/search_page.dart';
 
 class DetectMain extends StatefulWidget {

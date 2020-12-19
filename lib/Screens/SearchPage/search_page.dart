@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:what_food/Models/AiModel.dart';
+//import 'package:what_food/Models/AiModel.dart';
 //import 'package:what_food/Models/AiModel.dart';
 
 class SearchPage extends StatelessWidget {
