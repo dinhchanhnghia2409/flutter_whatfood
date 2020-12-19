@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:tflite/tflite.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:what_food/Models/AiModel.dart';
 import 'package:what_food/Screens/SearchPage/search_page.dart';
 
 class DetectMain extends StatefulWidget {
@@ -24,6 +25,7 @@ class _DetectMainState extends State<DetectMain> {
   double _imageWidth;
   double _imageHeight;
   var _recognitions;
+  List _data;
 
   loadModel() async {
     Tflite.close();
@@ -39,7 +41,6 @@ class _DetectMainState extends State<DetectMain> {
     }
   }
 
-  // run prediction using TFLite on given image
   // chạy dự đoán bằng TFLite trên hình ảnh nhất định
   Future predict(File image) async {
     var recognitions;
@@ -47,25 +48,25 @@ class _DetectMainState extends State<DetectMain> {
         path: image.path, // required
         imageMean: 0.0, // defaults to 117.0
         imageStd: 255.0, // defaults to 1.0
-        numResults: 2, // defaults to 5
-        threshold: 0.2, // defaults to 0.1
+        numResults: 3, // defaults to 5
+        threshold: 0.01, // defaults to 0.1
         asynch: true // defaults to true
         );
 
     print(recognitions);
+    print(recognitions[0]);
 
     setState(() {
       _recognitions = recognitions;
+      _data = recognitions;
     });
   }
 
-  // send image to predict method selected from gallery or camera
   // gửi hình ảnh để dự đoán phương pháp đã chọn từ thư viện hoặc máy ảnh
   sendImage(File image) async {
     if (image == null) return;
     await predict(image);
 
-    // get the width and height of selected image
     // lấy chiều rộng và chiều cao của hình ảnh đã chọn
     FileImage(image)
         .resolve(ImageConfiguration())
@@ -99,12 +100,10 @@ class _DetectMainState extends State<DetectMain> {
     print("hihih");
     print(_recognitions[0]['label'].toString());
     Get.to(SearchPage(
-      label: _recognitions[0]['label'].toString(),
+      aiData: _recognitions,
     ));
     Get.snackbar("Thong Bao", "Go to search screen");
   }
-
-  sreachScreen() {}
 
   Widget printValue(rcg) {
     if (rcg == null) {
@@ -118,46 +117,60 @@ class _DetectMainState extends State<DetectMain> {
     }
     return Padding(
       padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-      child: Center(
-        child: Text(
-          "Prediction: " + _recognitions[0]['label'].toString().toUpperCase(),
-          style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
-        ),
-      ),
+      child: _data.length == 2
+          ? Center(
+              child: Text(
+                "Prediction: " +
+                    _recognitions[0]['label'].toString().toUpperCase() +
+                    ", " +
+                    _recognitions[1]['label'].toString().toUpperCase(),
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
+              ),
+            )
+          : _data.length == 3
+              ? Center(
+                  child: Text(
+                    "Prediction: " +
+                        _recognitions[0]['label'].toString().toUpperCase() +
+                        ", " +
+                        _recognitions[1]['label'].toString().toUpperCase() +
+                        ", " +
+                        _recognitions[2]['label'].toString().toUpperCase(),
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
+                  ),
+                )
+              : Center(
+                  child: Text(
+                    "Prediction: " +
+                        _recognitions[0]['label'].toString().toUpperCase(),
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
+                  ),
+                ),
     );
   }
 
-  // gets called every time the widget need to re-render or build
   // được gọi mỗi khi tiện ích con cần kết xuất lại hoặc xây dựng
   @override
   Widget build(BuildContext context) {
-    // get the width and height of current screen the app is running on
     // lấy chiều rộng và chiều cao của màn hình hiện tại mà ứng dụng đang chạy
     Size size = MediaQuery.of(context).size;
 
-    // initialize two variables that will represent final width and height of the segmentation
-    // and image preview on screen
     // khởi tạo hai biến sẽ đại diện cho chiều rộng và chiều cao cuối cùng của phân đoạn
     // và xem trước hình ảnh trên màn hình
     double finalW;
     double finalH;
 
-    // when the app is first launch usually image width and height will be null
-    // therefore for default value screen width and height is given
     // khi ứng dụng được khởi chạy lần đầu, thường chiều rộng và chiều cao của hình ảnh sẽ là rỗng
     // do đó cho giá trị mặc định chiều rộng và chiều cao màn hình được đưa ra
     if (_imageWidth == null && _imageHeight == null) {
       finalW = size.width;
       finalH = size.height;
     } else {
-      // ratio width and ratio height will given ratio to
-      // scale up or down the preview image
       // tỷ lệ chiều rộng và tỷ lệ chiều cao sẽ cho tỷ lệ thành
       // tăng hoặc giảm tỷ lệ hình ảnh xem trước
       double ratioW = size.width / _imageWidth;
       double ratioH = size.height / _imageHeight;
 
-      // final width and height after the ratio scaling is applied
       // chiều rộng và chiều cao cuối cùng sau khi áp dụng chia tỷ lệ
       finalW = _imageWidth * ratioW * .85;
       finalH = _imageHeight * ratioH * .50;

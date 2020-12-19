@@ -1,3 +1,7 @@
-0 Carrot
-1 Water Melon
-2 Tomato
+Peanut
+Tomato
+Water Melon
+Coconut
+Carrot
+Orange
+Radish
